@@ -1,6 +1,8 @@
 <?php
 namespace Snscripts\ITCReporter;
 
+use GuzzleHttp\ClientInterface;
+
 class Reporter
 {
     const
@@ -12,6 +14,17 @@ class Reporter
     protected $userid;
     protected $password;
     protected $account = 'None';
+    protected $Guzzle;
+
+    /**
+     * constructor - setup guzzle dependency
+     *
+     * @param ClientInterface $Guzzle
+     */
+    public function __construct(ClientInterface $Guzzle)
+    {
+        $this->Guzzle = $Guzzle;
+    }
 
     /**
      * get list of accounts this user id has access to
@@ -22,7 +35,7 @@ class Reporter
     {
         $json = $this->buildJsonRequest('Sales.getAccounts');
 
-        return $this->performRequest($json);
+        return $this->performRequest(self::SALESURL, $json);
     }
 
     /**
@@ -61,6 +74,24 @@ class Reporter
         $json['queryInput'] = '[' . implode(', ', $queryInput) . ']';
 
         return json_encode($json);
+    }
+
+    /**
+     * given the endpoint & json request, perform the request
+     *
+     * @param string $endpoint
+     * @param string $jsonRequest
+     * @return mixed
+     */
+    public function performRequest($endpoint, $jsonRequest)
+    {
+        $Result = $this->Guzzle->request(
+            'POST',
+            $endpoint,
+            ['form_params' => [
+                'jsonRequest' => $jsonRequest
+            ]]
+        );
     }
 
     /**
