@@ -2,6 +2,7 @@
 namespace Snscripts\ITCReporter;
 
 use GuzzleHttp\ClientInterface;
+use Snscripts\Result\Result;
 
 class Reporter
 {
@@ -85,13 +86,22 @@ class Reporter
      */
     public function performRequest($endpoint, $jsonRequest)
     {
-        $Result = $this->Guzzle->request(
-            'POST',
-            $endpoint,
-            ['form_params' => [
-                'jsonRequest' => $jsonRequest
-            ]]
-        );
+        try {
+            $Result = $this->Guzzle->request(
+                'POST',
+                $endpoint,
+                [
+                    'form_params' => [
+                        'jsonRequest' => $jsonRequest
+                    ]
+                ]
+            );
+        } catch(\Exception $e) {
+            $Result = Result::fail(
+                Result::ERROR,
+                $e->getMessage()
+            );
+        }
     }
 
     /**
