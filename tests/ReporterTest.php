@@ -133,7 +133,15 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     	);
     }
 
+    public function testBuildJsonRequestThrowsExceptionWhenNoDataPassed()
+    {
+    	$this->setExpectedException('BadFunctionCallException');
 
+    	$Reporter = new Reporter;
 
-
+    	$Reporter->setUserId('me@example.com')
+    		->setPassword('mypassword!')
+    		->setAccountNum(1234567)
+    		->buildJsonRequest();
+    }
 }
