@@ -97,7 +97,7 @@ class Reporter
                 ]
             );
         } catch(\Exception $e) {
-            $Result = Result::fail(
+            return Result::fail(
                 Result::ERROR,
                 $e->getMessage()
             );
