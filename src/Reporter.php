@@ -18,7 +18,8 @@ class Reporter
     protected $account = 'None';
     protected $Guzzle;
     protected $responses = [
-        'Sales.getAccounts' => '\Snscripts\ITCReporter\Responses\SalesGetAccounts'
+        'Sales.getAccounts' => '\Snscripts\ITCReporter\Responses\SalesGetAccounts',
+        'Sales.getVendors' => '\Snscripts\ITCReporter\Responses\SalesGetVendors'
     ];
 
     /**
@@ -45,6 +46,27 @@ class Reporter
         if ($Result->isSuccess()) {
             return $this->processResponse(
                 'Sales.getAccounts',
+                $Result->getExtra('Response')
+            );
+        }
+
+        return [];
+    }
+
+    /**
+     * get list of vendors for the given account number
+     *
+     * @return array $vendors
+     */
+    public function getSalesVendors()
+    {
+        $json = $this->buildJsonRequest('Sales.getVendors');
+
+        $Result = $this->performRequest(self::SALESURL, $json);
+
+        if ($Result->isSuccess()) {
+            return $this->processResponse(
+                'Sales.getVendors',
                 $Result->getExtra('Response')
             );
         }
