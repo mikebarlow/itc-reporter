@@ -19,7 +19,8 @@ class Reporter
     protected $Guzzle;
     protected $responses = [
         'Sales.getAccounts' => '\Snscripts\ITCReporter\Responses\SalesGetAccounts',
-        'Sales.getVendors' => '\Snscripts\ITCReporter\Responses\SalesGetVendors'
+        'Sales.getVendors' => '\Snscripts\ITCReporter\Responses\SalesGetVendors',
+        'Sales.getReport' => '\Snscripts\ITCReporter\Responses\SalesGetReport'
     ];
 
     /**
@@ -67,6 +68,42 @@ class Reporter
         if ($Result->isSuccess()) {
             return $this->processResponse(
                 'Sales.getVendors',
+                $Result->getExtra('Response')
+            );
+        }
+
+        return [];
+    }
+
+    /**
+     * get Sales Report given the attribute
+     *
+     * @see https://help.apple.com/itc/appsreporterguide/#/itcbd9ed14ac
+     *
+     * @param string $vendor
+     * @param string $reportType
+     * @param string $reportSubType
+     * @param string $dateType
+     * @param string $date
+     *
+     * @return array $report
+     */
+    public function getSalesReport(
+        $vendor,
+        $reportType,
+        $reportSubType,
+        $dateType,
+        $date
+    ) {
+        $json = $this->buildJsonRequest(
+            'Sales.getReport'
+        );
+
+        $Result = $this->performRequest(self::SALESURL, $json);
+
+        if ($Result->isSuccess()) {
+            return $this->processResponse(
+                'Sales.getReport',
                 $Result->getExtra('Response')
             );
         }
