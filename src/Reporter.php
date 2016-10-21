@@ -106,6 +106,8 @@ class Reporter
 
         $Result = $this->performRequest(self::SALESURL, $json);
 
+        $Response = $Result->getExtra('Response');
+
         if ($Result->isSuccess()) {
             return $this->processResponse(
                 'Sales.getReport',

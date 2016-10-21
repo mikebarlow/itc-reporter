@@ -13,31 +13,31 @@ class SalesGetReport implements ResponseProcessor
 
 	public function process()
 	{
-		try {
-			$XML = new \SimpleXMLElement(
-				$this->Response->getBody()
-			);
-
-			var_dump($XML);
-			var_dump($this->Response);
-
-			// if (empty($XML->Vendor)) {
-			// 	throw new \Exception('No account data');
-			// }
-		} catch (\Exception $e) {
+		$contents = $this->Response->getBody()->getContents();
+		if (empty($contents)) {
 			return [];
 		}
 
-		// $vendors = [
-		// 	(string) $XML->Vendor
-		// ];
-		// todo: reinstate this when unit tests are written so we can check how it reacts
-		// foreach ($XML->Vendors as $VendorXML) {
-		// 	$id = (int) $VendorXML->Vendor;
+        $reportCSV = gzdecode($contents);
 
-		// 	$vendors[$id] = $id;
-		// }
+        $rows = explode("\n", $reportCSV);
+        $headers = explode("\t", array_shift($rows));
 
-		return [];
+        $reportArray = [];
+
+        foreach ($rows as $values) {
+        	if (empty($values)) {
+        		continue;
+        	}
+
+        	$data = explode("\t", $values);
+
+        	$reportArray[] = array_combine(
+        		$headers,
+        		$data
+        	);
+        }
+
+        return $reportArray;
 	}
 }
