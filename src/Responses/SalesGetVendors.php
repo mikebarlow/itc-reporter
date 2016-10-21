@@ -18,19 +18,22 @@ class SalesGetVendors implements ResponseProcessor
 				$this->Response->getBody()
 			);
 
-			if (empty($XML->Vendors)) {
+			if (empty($XML->Vendor)) {
 				throw new \Exception('No account data');
 			}
 		} catch (\Exception $e) {
 			return [];
 		}
 
-		$vendors = [];
-		foreach ($XML->Vendors as $VendorXML) {
-			$id = (int) $VendorXML->Vendor;
+		$vendors = [
+			(string) $XML->Vendor
+		];
+		// todo: reinstate this when unit tests are written so we can check how it reacts
+		// foreach ($XML->Vendors as $VendorXML) {
+		// 	$id = (int) $VendorXML->Vendor;
 
-			$vendors[$id] = $id;
-		}
+		// 	$vendors[$id] = $id;
+		// }
 
 		return $vendors;
 	}
