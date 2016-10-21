@@ -3,10 +3,8 @@ namespace Snscripts\ITCReporter\Interfaces;
 
 use Psr\Http\Message\ResponseInterface;
 
-interface ResponseProcesser
+interface ResponseProcessor
 {
-	public $Response;
-
 	public function __construct(ResponseInterface $Response);
 
 	public function process();
