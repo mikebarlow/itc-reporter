@@ -2,7 +2,7 @@
     "name": "snscripts/itc-reporter",
     "description": "PHP package for downloading stats from iTunes Connect - Replacement for Apples Java based Reporter.jar",
     "keywords": ["iTunes", "Connect", "Reporter.jar", "App Stats"],
-    "homepage": "https://github.com/snscripts/itc-reporter",
+    "homepage": "https://github.com/mikebarlow/itc-reporter",
     "license": "MIT",
     "authors": [
         {
