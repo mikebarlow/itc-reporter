@@ -18,9 +18,10 @@ class Reporter
     protected $account = 'None';
     protected $Guzzle;
     protected $responses = [
-        'Sales.getAccounts' => '\Snscripts\ITCReporter\Responses\SalesGetAccounts',
-        'Sales.getVendors' => '\Snscripts\ITCReporter\Responses\SalesGetVendors',
-        'Sales.getReport' => '\Snscripts\ITCReporter\Responses\SalesGetReport'
+        'Sales.getAccounts'            => '\Snscripts\ITCReporter\Responses\SalesGetAccounts',
+        'Sales.getVendors'             => '\Snscripts\ITCReporter\Responses\SalesGetVendors',
+        'Sales.getReport'              => '\Snscripts\ITCReporter\Responses\SalesGetReport',
+        'Finance.getVendorsAndRegions' => '\Snscripts\ITCReporter\Responses\FinanceGetVendors'
     ];
 
     /**
@@ -111,6 +112,27 @@ class Reporter
         if ($Result->isSuccess()) {
             return $this->processResponse(
                 'Sales.getReport',
+                $Result->getExtra('Response')
+            );
+        }
+
+        return [];
+    }
+
+    /**
+     * get list of finance vendors and regions for the given account number
+     *
+     * @return array $vendors
+     */
+    public function getFinanceVendors()
+    {
+        $json = $this->buildJsonRequest('Finance.getVendorsAndRegions');
+
+        $Result = $this->performRequest(self::FINANCEURL, $json);
+
+        if ($Result->isSuccess()) {
+            return $this->processResponse(
+                'Finance.getVendorsAndRegions',
                 $Result->getExtra('Response')
             );
         }
