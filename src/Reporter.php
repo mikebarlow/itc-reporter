@@ -133,7 +133,7 @@ class Reporter
             'password' => $this->password,
             'version'  => self::VERSION,
             'mode'     => self::MODE,
-            'account'  => $this->account
+            'account'  => (string)$this->account
         ];
 
         // build up the action and parameters we actually want to perform
