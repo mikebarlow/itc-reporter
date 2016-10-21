@@ -3,6 +3,7 @@ namespace Snscripts\ITCReporter;
 
 use GuzzleHttp\ClientInterface;
 use Snscripts\Result\Result;
+use Psr\Http\Message\ResponseInterface;
 
 class Reporter
 {
@@ -16,6 +17,9 @@ class Reporter
     protected $password;
     protected $account = 'None';
     protected $Guzzle;
+    protected $responses = [
+        'Sales.getAccounts' => '\Snscripts\ITCReporter\Responses\SalesGetAccounts'
+    ];
 
     /**
      * constructor - setup guzzle dependency
@@ -36,7 +40,16 @@ class Reporter
     {
         $json = $this->buildJsonRequest('Sales.getAccounts');
 
-        return $this->performRequest(self::SALESURL, $json);
+        $Result = $this->performRequest(self::SALESURL, $json);
+
+        if ($Result->isSuccess()) {
+            return $this->processResponse(
+                'Sales.getAccounts',
+                $Result->getExtra('Response')
+            );
+        }
+
+        return [];
     }
 
     /**
@@ -82,12 +95,12 @@ class Reporter
      *
      * @param string $endpoint
      * @param string $jsonRequest
-     * @return mixed
+     * @return Result
      */
     public function performRequest($endpoint, $jsonRequest)
     {
         try {
-            $Result = $this->Guzzle->request(
+            $Response = $this->Guzzle->request(
                 'POST',
                 $endpoint,
                 [
@@ -96,12 +109,41 @@ class Reporter
                     ]
                 ]
             );
+
+            if ($Response->getStatusCode() !== 200) {
+                throw new \UnexpectedValueException('The request did not return a 200 OK response');
+            }
+
+            return Result::success('OK')
+                ->setExtra('Response', $Response);
         } catch(\Exception $e) {
             return Result::fail(
                 Result::ERROR,
                 $e->getMessage()
             );
         }
+    }
+
+    /**
+     * process the XML returned from API
+     *
+     * @param string $action
+     * @param Psr\Http\Message\ResponseInterface $Response
+     * @return array
+     */
+    public function processResponse($action, ResponseInterface $Response)
+    {
+        if (empty($this->responses[$action])) {
+            throw new \InvalidArgumentException($action . ' was passed to processResponse, no Response class exists for this action.');
+        }
+
+        $responseClass = $this->responses[$action];
+
+        $ResponseProcesser = new $responseClass(
+            $Response
+        );
+
+        return $ResponseProcesser->process();
     }
 
     /**
