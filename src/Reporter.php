@@ -96,7 +96,12 @@ class Reporter
         $date
     ) {
         $json = $this->buildJsonRequest(
-            'Sales.getReport'
+            'Sales.getReport',
+            $vendor,
+            $reportType,
+            $reportSubType,
+            $dateType,
+            $date
         );
 
         $Result = $this->performRequest(self::SALESURL, $json);
