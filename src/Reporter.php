@@ -21,6 +21,7 @@ class Reporter
         'Sales.getAccounts'            => '\Snscripts\ITCReporter\Responses\SalesGetAccounts',
         'Sales.getVendors'             => '\Snscripts\ITCReporter\Responses\SalesGetVendors',
         'Sales.getReport'              => '\Snscripts\ITCReporter\Responses\SalesGetReport',
+        'Finance.getAccounts'          => '\Snscripts\ITCReporter\Responses\FinanceGetAccounts',
         'Finance.getVendorsAndRegions' => '\Snscripts\ITCReporter\Responses\FinanceGetVendors'
     ];
 
@@ -35,11 +36,11 @@ class Reporter
     }
 
     /**
-     * get list of accounts this user id has access to
+     * get list of sales accounts this user id has access to
      *
      * @return array $accounts
      */
-    public function getAccounts()
+    public function getSalesAccounts()
     {
         $json = $this->buildJsonRequest('Sales.getAccounts');
 
@@ -112,6 +113,27 @@ class Reporter
         if ($Result->isSuccess()) {
             return $this->processResponse(
                 'Sales.getReport',
+                $Result->getExtra('Response')
+            );
+        }
+
+        return [];
+    }
+
+    /**
+     * get list of finance accounts this user id has access to
+     *
+     * @return array $accounts
+     */
+    public function getFinanceAccounts()
+    {
+        $json = $this->buildJsonRequest('Finance.getAccounts');
+
+        $Result = $this->performRequest(self::FINANCEURL, $json);
+
+        if ($Result->isSuccess()) {
+            return $this->processResponse(
+                'Finance.getAccounts',
                 $Result->getExtra('Response')
             );
         }
