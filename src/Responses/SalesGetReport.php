@@ -6,17 +6,17 @@ use Psr\Http\Message\ResponseInterface;
 
 class SalesGetReport implements ResponseProcessor
 {
-	public function __construct(ResponseInterface $Response)
-	{
-		$this->Response = $Response;
-	}
+    public function __construct(ResponseInterface $Response)
+    {
+        $this->Response = $Response;
+    }
 
-	public function process()
-	{
-		$contents = $this->Response->getBody()->getContents();
-		if (empty($contents)) {
-			return [];
-		}
+    public function process()
+    {
+        $contents = $this->Response->getBody()->getContents();
+        if (empty($contents)) {
+            return [];
+        }
 
         $reportCSV = gzdecode($contents);
 
@@ -26,18 +26,18 @@ class SalesGetReport implements ResponseProcessor
         $reportArray = [];
 
         foreach ($rows as $values) {
-        	if (empty($values)) {
-        		continue;
-        	}
+            if (empty($values)) {
+                    continue;
+            }
 
-        	$data = explode("\t", $values);
+            $data = explode("\t", $values);
 
-        	$reportArray[] = array_combine(
-        		$headers,
-        		$data
-        	);
+            $reportArray[] = array_combine(
+                    $headers,
+                    $data
+            );
         }
 
         return $reportArray;
-	}
+    }
 }

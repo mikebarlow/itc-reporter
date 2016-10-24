@@ -25,15 +25,10 @@ class SalesGetVendors implements ResponseProcessor
 			return [];
 		}
 
-		$vendors = [
-			(string) $XML->Vendor
-		];
-		// todo: reinstate this when unit tests are written so we can check how it reacts
-		// foreach ($XML->Vendors as $VendorXML) {
-		// 	$id = (int) $VendorXML->Vendor;
-
-		// 	$vendors[$id] = $id;
-		// }
+		$vendors = [];
+		foreach ($XML->Vendor as $Vendor) {
+			$vendors[] = (int) $Vendor;
+		}
 
 		return $vendors;
 	}
