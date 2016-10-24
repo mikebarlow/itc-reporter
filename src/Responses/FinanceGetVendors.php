@@ -6,35 +6,50 @@ use Psr\Http\Message\ResponseInterface;
 
 class FinanceGetVendors implements ResponseProcessor
 {
-	public function __construct(ResponseInterface $Response)
-	{
-		$this->Response = $Response;
-	}
+    public function __construct(ResponseInterface $Response)
+    {
+        $this->Response = $Response;
+    }
 
-	public function process()
-	{
-		try {
-			$XML = new \SimpleXMLElement(
-				$this->Response->getBody()
-			);
+    public function process()
+    {
+        try {
+            $XML = new \SimpleXMLElement(
+                $this->Response->getBody()
+            );
 
-			if (empty($XML->VendorsAndRegions)) {
-				throw new \Exception('No account data');
-			}
-		} catch (\Exception $e) {
-			return [];
-		}
+            if (empty($XML->Vendor)) {
+                throw new \Exception('No account data');
+            }
+        } catch (\Exception $e) {
+            return [];
+        }
 
-		$vendors = [
+        $vendors = [];
+        foreach ($XML->Vendor as $VendorXML) {
+            $id = (int) $VendorXML->Number;
 
-		];
-		// todo: reinstate this when unit tests are written so we can check how it reacts
-		// foreach ($XML->Vendors as $VendorXML) {
-		// 	$id = (int) $VendorXML->Vendor;
+            $regions = [];
+            foreach ($VendorXML->Region as $RegionXML) {
+                $code = (string) $RegionXML->Code;
 
-		// 	$vendors[$id] = $id;
-		// }
+                $reports = [];
+                foreach ($RegionXML->Reports->Report as $Report) {
+                    $reports[] = (string) $Report;
+                }
 
-		return $vendors;
-	}
+                $regions[$code] = [
+                    'Code' => $code,
+                    'Reports' => $reports
+                ];
+            }
+
+            $vendors[$id] = [
+                'Number' => $id,
+                'Regions' => $regions
+            ];
+        }
+
+        return $vendors;
+    }
 }
