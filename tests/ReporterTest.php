@@ -134,7 +134,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             ->setAccountNum(1234567);
 
         $this->assertSame(
-            '{"userid":"me@example.com","password":"mypassword!","version":"1.0","mode":"Robot.XML","account":1234567,"queryInput":"[p=Reporter.properties, Sales.getVendors]"}',
+            '{"userid":"me@example.com","password":"mypassword!","version":"1.0","mode":"Robot.XML","account":"1234567","queryInput":"[p=Reporter.properties, Sales.getVendors]"}',
             $Reporter->buildJsonRequest('Sales.getVendors')
         );
     }
