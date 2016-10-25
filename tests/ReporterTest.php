@@ -167,4 +167,56 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             ->setAccountNum(1234567)
             ->buildJsonRequest();
     }
+
+    public function testProcessResponseReturnsCorrectArray()
+    {
+        $action = 'Sales.getVendors';
+
+        $WorkingResponse = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $WorkingResponse->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>');
+
+        $Reporter = new Reporter(
+            new Client
+        );
+
+        $this->assertSame(
+            [
+                1234567,
+                9876543
+            ],
+            $Reporter->processResponse(
+                $action,
+                $WorkingResponse
+            )
+        );
+
+        $BlankResponse = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $BlankResponse->method('getBody')
+            ->willReturn('');
+
+        $this->assertSame(
+            [],
+            $Reporter->processResponse(
+                $action,
+                $BlankResponse
+            )
+        );
+    }
+
+    public function testProcessResponseThrowsExceptionIfInvalidAction()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        $BlankResponse = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $BlankResponse->method('getBody')
+            ->willReturn('');
+
+        $Reporter = new Reporter(
+            new Client
+        );
+
+        $Reporter->processResponse('foobar', $BlankResponse);
+    }
+
 }
