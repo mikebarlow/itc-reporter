@@ -4,7 +4,7 @@ namespace Snscripts\ITCReporter\Responses;
 use Snscripts\ITCReporter\Interfaces\ResponseProcessor;
 use Psr\Http\Message\ResponseInterface;
 
-class SalesGetReport implements ResponseProcessor
+class FinanceGetReport implements ResponseProcessor
 {
     public function __construct(ResponseInterface $Response)
     {

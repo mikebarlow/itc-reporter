@@ -23,6 +23,7 @@ class Reporter
         'Sales.getReport'              => '\Snscripts\ITCReporter\Responses\SalesGetReport',
         'Finance.getAccounts'          => '\Snscripts\ITCReporter\Responses\FinanceGetAccounts',
         'Finance.getVendorsAndRegions' => '\Snscripts\ITCReporter\Responses\FinanceGetVendors'
+        'Finance.getReport'            => '\Snscripts\ITCReporter\Responses\FinanceGetReport',
     ];
 
     /**
@@ -155,6 +156,49 @@ class Reporter
         if ($Result->isSuccess()) {
             return $this->processResponse(
                 'Finance.getVendorsAndRegions',
+                $Result->getExtra('Response')
+            );
+        }
+
+        return [];
+    }
+
+    /**
+     * get Finance Report given the attribute
+     *
+     * @see https://help.apple.com/itc/appsreporterguide/#/itc21263284f
+     *
+     * @param string $vendor
+     * @param string $regionCode
+     * @param string $reportType
+     * @param string $year
+     * @param string $period
+     *
+     * @return array $report
+     */
+    public function getFinanceReport(
+        $vendor,
+        $regionCode,
+        $reportType,
+        $year,
+        $period
+    ) {
+        $json = $this->buildJsonRequest(
+            'Finance.getReport',
+            $vendor,
+            $regionCode,
+            $reportType,
+            $year,
+            $period
+        );
+
+        $Result = $this->performRequest(self::FINANCEURL, $json);
+
+        $Response = $Result->getExtra('Response');
+
+        if ($Result->isSuccess()) {
+            return $this->processResponse(
+                'Finance.getReport',
                 $Result->getExtra('Response')
             );
         }
