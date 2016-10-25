@@ -331,6 +331,10 @@ If nothing was found or a problem occurred, a blank array will be returned. If t
 	    [Total_Amount] => 28.32
 	    [Total_Units] => 58
 	]
+	
+## Changelog
+
+You can view the changelog [HERE](https://github.com/mikebarlow/itc-reporter/blob/master/CHANGELOG.md)
 
 ## Contributing
 
