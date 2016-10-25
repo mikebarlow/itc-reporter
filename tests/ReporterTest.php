@@ -302,4 +302,400 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             $Result->getMessage()
         );
     }
+
+    public function testGetSalesAccountsReturnsCorrectArray()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>');
+        $Response->method('getStatusCode')
+            ->willReturn(200);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+
+        $this->assertSame(
+            [
+                1234567 => [
+                    'Name' => 'John Smith',
+                    'Number' => 1234567
+                ]
+            ],
+            $Reporter->getSalesAccounts()
+        );
+    }
+
+    public function testGetSalesAccountsReturnsBlankArrayOnFail()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('');
+        $Response->method('getStatusCode')
+            ->willReturn(404);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+
+        $this->assertSame(
+            [],
+            $Reporter->getSalesAccounts()
+        );
+    }
+
+    public function testGetSalesVendorsReturnsCorrectArray()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>');
+        $Response->method('getStatusCode')
+            ->willReturn(200);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+
+        $this->assertSame(
+            [
+                1234567,
+                9876543
+            ],
+            $Reporter->getSalesVendors()
+        );
+    }
+
+    public function testGetSalesVendorsReturnsBlankArrayOnFail()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('');
+        $Response->method('getStatusCode')
+            ->willReturn(404);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+
+        $this->assertSame(
+            [],
+            $Reporter->getSalesVendors()
+        );
+    }
+
+    public function testGetFinanceAccountsReturnsCorrectArray()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>');
+        $Response->method('getStatusCode')
+            ->willReturn(200);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+
+        $this->assertSame(
+            [
+                1234567 => [
+                    'Name' => 'John Smith',
+                    'Number' => 1234567
+                ]
+            ],
+            $Reporter->getFinanceAccounts()
+        );
+    }
+
+    public function testGetFinanceAccountsReturnsBlankArrayOnFail()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('');
+        $Response->method('getStatusCode')
+            ->willReturn(404);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+
+        $this->assertSame(
+            [],
+            $Reporter->getFinanceAccounts()
+        );
+    }
+
+    public function testGetFinanceVendorsReturnsCorrectArray()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><VendorsAndRegions><Vendor><Number>1234567</Number><Region><Code>AE</Code><Reports><Report>Financial</Report></Reports></Region><Region><Code>AU</Code><Reports><Report>Financial</Report><Report>Sale</Report></Reports></Region></Vendor></VendorsAndRegions>');
+        $Response->method('getStatusCode')
+            ->willReturn(200);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+
+        $this->assertSame(
+            [
+                1234567 => [
+                    'Number' => 1234567,
+                    'Regions' => [
+                        'AE' => [
+                            'Code' => 'AE',
+                            'Reports' => [
+                                'Financial'
+                            ]
+                        ],
+                        'AU' => [
+                            'Code' => 'AU',
+                            'Reports' => [
+                                'Financial',
+                                'Sale'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            $Reporter->getFinanceVendors()
+        );
+    }
+
+    public function testGetFinanceVendorsReturnsBlankArrayOnFail()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('');
+        $Response->method('getStatusCode')
+            ->willReturn(404);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+
+        $this->assertSame(
+            [],
+            $Reporter->getFinanceVendors()
+        );
+    }
+
+    public function testGetSalesReportReturnsCorrectReport()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn(
+                new TestSalesReportContent
+            );
+        $Response->method('getStatusCode')
+            ->willReturn(200);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+
+        $this->assertSame(
+            [
+                [
+                    'Header 1' => 'Foo',
+                    'Header 2' => 'Bar',
+                    'Header 3' => 'Foobar'
+                ],
+                [
+                    'Header 1' => 'Fizz',
+                    'Header 2' => '',
+                    'Header 3' => 'Fizzbuzz'
+                ],
+                [
+                    'Header 1' => '',
+                    'Header 2' => 'Test',
+                    'Header 3' => 'Tester'
+                ]
+            ],
+            $Reporter->getSalesReport(1234567, 'Sales', 'Summary', 'Daily', '20161025')
+        );
+    }
+
+    public function testGetSalesReportReturnsBlankArrayWhenNoReport()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn(
+                new TestSalesReportNoContent
+            );
+        $Response->method('getStatusCode')
+            ->willReturn(404);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+
+        $this->assertSame(
+            [],
+            $Reporter->getSalesReport(1234567, 'Sales', 'Summary', 'Daily', '20161025')
+        );
+    }
+
+    public function testGetFinanceReportReturnsCorrectReport()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn(
+                new TestFinanceReportContent
+            );
+        $Response->method('getStatusCode')
+            ->willReturn(200);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+
+        $this->assertSame(
+            [
+                [
+                    'Header 1' => 'Foo',
+                    'Header 2' => 'Bar',
+                    'Header 3' => 'Foobar'
+                ],
+                [
+                    'Header 1' => 'Fizz',
+                    'Header 2' => '',
+                    'Header 3' => 'Fizzbuzz'
+                ],
+                [
+                    'Header 1' => '',
+                    'Header 2' => 'Test',
+                    'Header 3' => 'Tester'
+                ],
+                'Total' => '100',
+                'Grand Total' => '500'
+            ],
+            $Reporter->getFinanceReport(1234567, 'GB', 'Financial', '2016', '1')
+        );
+    }
+
+    public function testGetFinanceReportReturnsBlankArrayWhenNoReport()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn(
+                new TestFinanceReportNoContent
+            );
+        $Response->method('getStatusCode')
+            ->willReturn(404);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+
+        $this->assertSame(
+            [],
+            $Reporter->getFinanceReport(1234567, 'GB', 'Financial', '2016', '1')
+        );
+    }
+}
+
+class TestSalesReportContent
+{
+    public function getContents()
+    {
+        $report = "Header 1\tHeader 2\tHeader 3\n\nFoo\tBar\tFoobar\nFizz\t\tFizzbuzz\n\tTest\tTester";
+        return gzencode($report);
+    }
+}
+
+class TestSalesReportNoContent
+{
+    public function getContents()
+    {
+        return '';
+    }
+}
+
+class TestFinanceReportContent
+{
+    public function getContents()
+    {
+        $report = "Header 1\tHeader 2\tHeader 3\nFoo\tBar\tFoobar\n\nFizz\t\tFizzbuzz\n\tTest\tTester\nTotal\t100\nGrand Total\t500";
+        return gzencode($report);
+    }
+}
+
+class TestFinanceReportNoContent
+{
+    public function getContents()
+    {
+        return '';
+    }
 }
