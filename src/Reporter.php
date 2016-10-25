@@ -22,8 +22,8 @@ class Reporter
         'Sales.getVendors'             => '\Snscripts\ITCReporter\Responses\SalesGetVendors',
         'Sales.getReport'              => '\Snscripts\ITCReporter\Responses\SalesGetReport',
         'Finance.getAccounts'          => '\Snscripts\ITCReporter\Responses\FinanceGetAccounts',
-        'Finance.getVendorsAndRegions' => '\Snscripts\ITCReporter\Responses\FinanceGetVendors'
-        'Finance.getReport'            => '\Snscripts\ITCReporter\Responses\FinanceGetReport',
+        'Finance.getVendorsAndRegions' => '\Snscripts\ITCReporter\Responses\FinanceGetVendors',
+        'Finance.getReport'            => '\Snscripts\ITCReporter\Responses\FinanceGetReport'
     ];
 
     /**
