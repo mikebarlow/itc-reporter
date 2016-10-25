@@ -85,7 +85,7 @@ class TestSalesReportContent
 {
     public function getContents()
     {
-        $report = "Header 1\tHeader 2\tHeader 3\nFoo\tBar\tFoobar\nFizz\t\tFizzbuzz\n\tTest\tTester";
+        $report = "Header 1\tHeader 2\tHeader 3\n\nFoo\tBar\tFoobar\nFizz\t\tFizzbuzz\n\tTest\tTester";
         return gzencode($report);
     }
 }

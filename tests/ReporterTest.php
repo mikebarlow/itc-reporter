@@ -72,10 +72,10 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             new Client
         );
 
-        $Reporter->setUserId(123);
-        $Reporter->setUserId([]);
-        $Reporter->setUserId(new \StdClass);
-        $Reporter->setUserId('');
+        $Reporter->setPassword(123);
+        $Reporter->setPassword([]);
+        $Reporter->setPassword(new \StdClass);
+        $Reporter->setPassword('');
     }
 
     public function testCanSetAndGetAccount()
