@@ -5,21 +5,14 @@ use Snscripts\ITCReporter\Responses\FinanceGetAccounts;
 
 class FinanceGetAccountsTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        $this->singleResponse = $this->getMock('Psr\Http\Message\ResponseInterface');
-        $this->singleResponse->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>');
-
-        $this->multiResponse = $this->getMock('Psr\Http\Message\ResponseInterface');
-        $this->multiResponse->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account><Account><Name>Jane Doe</Name><Number>9876543</Number></Account></Accounts>');
-    }
-
     public function testProcessReturnsCorrectValueForSingleFinanceAccount()
     {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>');
+
         $Processor = new FinanceGetAccounts(
-            $this->singleResponse
+            $Response
         );
 
         $this->assertSame(
@@ -35,8 +28,12 @@ class FinanceGetAccountsTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsCorrectValueForMultipleFinanceAccount()
     {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account><Account><Name>Jane Doe</Name><Number>9876543</Number></Account></Accounts>');
+
         $Processor = new FinanceGetAccounts(
-            $this->multiResponse
+            $Response
         );
 
         $this->assertSame(
@@ -50,6 +47,38 @@ class FinanceGetAccountsTest extends \PHPUnit_Framework_TestCase
                     'Number' => 9876543
                 ]
             ],
+            $Processor->process()
+        );
+    }
+
+    public function testProcessReturnsEmptyArrayForInvalidXML()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith 1234567</Number></Account><Account><Name>Jane Doe</Name><Number>9876543</Number></Accounts>');
+
+        $Processor = new FinanceGetAccounts(
+            $Response
+        );
+
+        $this->assertSame(
+            [],
+            $Processor->process()
+        );
+    }
+
+    public function testProcessReturnsEmptyArrayForEmptyContents()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('');
+
+        $Processor = new FinanceGetAccounts(
+            $Response
+        );
+
+        $this->assertSame(
+            [],
             $Processor->process()
         );
     }

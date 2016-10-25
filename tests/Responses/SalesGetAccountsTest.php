@@ -5,22 +5,16 @@ use Snscripts\ITCReporter\Responses\SalesGetAccounts;
 
 class SalesGetAccountsTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        $this->singleResponse = $this->getMock('Psr\Http\Message\ResponseInterface');
-        $this->singleResponse->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>');
-
-        $this->multiResponse = $this->getMock('Psr\Http\Message\ResponseInterface');
-        $this->multiResponse->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account><Account><Name>Jane Doe</Name><Number>9876543</Number></Account></Accounts>');
-    }
-
     public function testProcessReturnsCorrectValueForSingleSalesAccount()
     {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>');
+
         $Processor = new SalesGetAccounts(
-            $this->singleResponse
+            $Response
         );
+
 
         $this->assertSame(
             [
@@ -35,8 +29,12 @@ class SalesGetAccountsTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsCorrectValueForMultipleSalesAccount()
     {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account><Account><Name>Jane Doe</Name><Number>9876543</Number></Account></Accounts>');
+
         $Processor = new SalesGetAccounts(
-            $this->multiResponse
+            $Response
         );
 
         $this->assertSame(
@@ -50,6 +48,38 @@ class SalesGetAccountsTest extends \PHPUnit_Framework_TestCase
                     'Number' => 9876543
                 ]
             ],
+            $Processor->process()
+        );
+    }
+
+    public function testProcessReturnsEmptyArrayForInvalidXML()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith 1234567</Number></Account><Account><Name>Jane Doe</Name><Number>9876543</Number></Accounts>');
+
+        $Processor = new SalesGetAccounts(
+            $Response
+        );
+
+        $this->assertSame(
+            [],
+            $Processor->process()
+        );
+    }
+
+    public function testProcessReturnsEmptyArrayForEmptyContents()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('');
+
+        $Processor = new SalesGetAccounts(
+            $Response
+        );
+
+        $this->assertSame(
+            [],
             $Processor->process()
         );
     }
