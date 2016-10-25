@@ -2,6 +2,7 @@
 namespace Snscripts\ITCReporter\Tests;
 
 use Snscripts\ITCReporter\Reporter;
+use Snscripts\Result\Result;
 use GuzzleHttp\Client;
 
 class ReporterTest extends \PHPUnit_Framework_TestCase
@@ -219,4 +220,86 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
         $Reporter->processResponse('foobar', $BlankResponse);
     }
 
+    public function testPerformRequestCanCheckStatusAndReturnCorrectly()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>');
+        $Response->method('getStatusCode')
+            ->willReturn(200);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+        $Reporter->setUserId('me@me.com')->setPassword('123qaz');
+
+        $Result = $Reporter->performRequest(
+            Reporter::SALESURL,
+            $Reporter->buildJsonRequest('Sales.getVendors')
+        );
+
+        $this->assertInstanceOf(
+            'Snscripts\Result\Result',
+            $Result
+        );
+
+        $this->assertTrue(
+            $Result->isSuccess()
+        );
+
+        $this->assertInstanceOf(
+            'Psr\Http\Message\ResponseInterface',
+            $Result->getExtra('Response')
+        );
+
+        $this->assertSame(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>',
+            $Result->getExtra('Response')->getBody()
+        );
+    }
+
+    public function testPerformRequestWhenResponseHasFailed()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('');
+        $Response->method('getStatusCode')
+            ->willReturn(404);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+        $Reporter->setUserId('me@me.com')->setPassword('123qaz');
+
+        $Result = $Reporter->performRequest(
+            Reporter::SALESURL,
+            $Reporter->buildJsonRequest('Sales.getVendors')
+        );
+
+        $this->assertInstanceOf(
+            'Snscripts\Result\Result',
+            $Result
+        );
+
+        $this->assertTrue(
+            $Result->isFail()
+        );
+
+        $this->assertSame(
+            'The request did not return a 200 OK response',
+            $Result->getMessage()
+        );
+    }
 }
