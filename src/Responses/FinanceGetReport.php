@@ -22,6 +22,7 @@ class FinanceGetReport implements ResponseProcessor
 
         $rows = explode("\n", $reportCSV);
         $headers = explode("\t", array_shift($rows));
+        $headerCount = count($headers);
 
         $reportArray = [];
 
@@ -31,11 +32,16 @@ class FinanceGetReport implements ResponseProcessor
             }
 
             $data = explode("\t", $values);
+            $dataCount = count($data);
 
-            $reportArray[] = array_combine(
-                $headers,
-                $data
-            );
+            if ($headerCount !== $dataCount && $dataCount === 2) {
+                $reportArray[$data[0]] = $data[1];
+            } else {
+                $reportArray[] = array_combine(
+                    $headers,
+                    $data
+                );
+            }
         }
 
         return $reportArray;

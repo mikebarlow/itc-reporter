@@ -1,22 +1,22 @@
 <?php
 namespace Snscripts\ITCReporter\Tests\Responses;
 
-use Snscripts\ITCReporter\Responses\SalesGetReport;
+use Snscripts\ITCReporter\Responses\FinanceGetReport;
 
-class SalesGetReportTest extends \PHPUnit_Framework_TestCase
+class FinanceGetReportTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->response = $this->getMock('Psr\Http\Message\ResponseInterface');
         $this->response->method('getBody')
             ->willReturn(
-                new TestSalesReportContent
+                new TestFinanceReportContent
             );
     }
 
     public function testProcessReturnsReportInArrayFormat()
     {
-        $Processor = new SalesGetReport(
+        $Processor = new FinanceGetReport(
             $this->response
         );
 
@@ -36,18 +36,20 @@ class SalesGetReportTest extends \PHPUnit_Framework_TestCase
                     'Header 1' => '',
                     'Header 2' => 'Test',
                     'Header 3' => 'Tester'
-                ]
+                ],
+                'Total' => '100',
+                'Grand Total' => '500'
             ],
             $Processor->process()
         );
     }
 }
 
-class TestSalesReportContent
+class TestFinanceReportContent
 {
     public function getContents()
     {
-        $report = "Header 1\tHeader 2\tHeader 3\nFoo\tBar\tFoobar\nFizz\t\tFizzbuzz\n\tTest\tTester";
+        $report = "Header 1\tHeader 2\tHeader 3\nFoo\tBar\tFoobar\nFizz\t\tFizzbuzz\n\tTest\tTester\nTotal\t100\nGrand Total\t500";
         return gzencode($report);
     }
 }
