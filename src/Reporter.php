@@ -270,7 +270,7 @@ class Reporter
 
             return Result::success('OK')
                 ->setExtra('Response', $Response);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return Result::fail(
                 Result::ERROR,
                 $e->getMessage()
@@ -288,7 +288,9 @@ class Reporter
     public function processResponse($action, ResponseInterface $Response)
     {
         if (empty($this->responses[$action])) {
-            throw new \InvalidArgumentException($action . ' was passed to processResponse, no Response class exists for this action.');
+            throw new \InvalidArgumentException(
+                $action . ' was passed to processResponse, no Response class exists for this action.'
+            );
         }
 
         $responseClass = $this->responses[$action];
@@ -364,7 +366,9 @@ class Reporter
     public function setAccountNum($account)
     {
         if (! is_int($account)) {
-            throw new \InvalidArgumentException('Argument passed to Reporter::setAccount must be an integer account number');
+            throw new \InvalidArgumentException(
+                'Argument passed to Reporter::setAccount must be an integer account number'
+            );
         }
 
         $this->account = $account;
