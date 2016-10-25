@@ -5,19 +5,16 @@ use Snscripts\ITCReporter\Responses\FinanceGetReport;
 
 class FinanceGetReportTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
+    public function testProcessReturnsReportInArrayFormat()
     {
-        $this->response = $this->getMock('Psr\Http\Message\ResponseInterface');
-        $this->response->method('getBody')
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
             ->willReturn(
                 new TestFinanceReportContent
             );
-    }
 
-    public function testProcessReturnsReportInArrayFormat()
-    {
         $Processor = new FinanceGetReport(
-            $this->response
+            $Response
         );
 
         $this->assertSame(
@@ -43,6 +40,42 @@ class FinanceGetReportTest extends \PHPUnit_Framework_TestCase
             $Processor->process()
         );
     }
+
+    public function testProcessReturnsEmptyArrayWhenContentsEmpty()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn(
+                new TestFinanceReportNoContent
+            );
+
+        $Processor = new FinanceGetReport(
+            $Response
+        );
+
+        $this->assertSame(
+            [],
+            $Processor->process()
+        );
+    }
+
+    public function testProcessReturnsEmptyArrayIfFileIsNotGZipped()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn(
+                new TestFinanceReportNoEncoding
+            );
+
+        $Processor = new FinanceGetReport(
+            $Response
+        );
+
+        $this->assertSame(
+            [],
+            $Processor->process()
+        );
+    }
 }
 
 class TestFinanceReportContent
@@ -51,5 +84,21 @@ class TestFinanceReportContent
     {
         $report = "Header 1\tHeader 2\tHeader 3\nFoo\tBar\tFoobar\nFizz\t\tFizzbuzz\n\tTest\tTester\nTotal\t100\nGrand Total\t500";
         return gzencode($report);
+    }
+}
+
+class TestFinanceReportNoEncoding
+{
+    public function getContents()
+    {
+        return "Header 1\tHeader 2\tHeader 3\nFoo\tBar\tFoobar\nFizz\t\tFizzbuzz\n\tTest\tTester\nTotal\t100\nGrand Total\t500";
+    }
+}
+
+class TestFinanceReportNoContent
+{
+    public function getContents()
+    {
+        return '';
     }
 }

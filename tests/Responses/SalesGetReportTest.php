@@ -7,17 +7,19 @@ class SalesGetReportTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->response = $this->getMock('Psr\Http\Message\ResponseInterface');
-        $this->response->method('getBody')
-            ->willReturn(
-                new TestSalesReportContent
-            );
+
     }
 
     public function testProcessReturnsReportInArrayFormat()
     {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn(
+                new TestSalesReportContent
+            );
+
         $Processor = new SalesGetReport(
-            $this->response
+            $Response
         );
 
         $this->assertSame(
@@ -41,6 +43,42 @@ class SalesGetReportTest extends \PHPUnit_Framework_TestCase
             $Processor->process()
         );
     }
+
+    public function testProcessReturnsEmptyArrayWhenContentsEmpty()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn(
+                new TestSalesReportNoContent
+            );
+
+        $Processor = new SalesGetReport(
+            $Response
+        );
+
+        $this->assertSame(
+            [],
+            $Processor->process()
+        );
+    }
+
+    public function testProcessReturnsEmptyArrayIfFileIsNotGZipped()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn(
+                new TestSalesReportNoEncoding
+            );
+
+        $Processor = new SalesGetReport(
+            $Response
+        );
+
+        $this->assertSame(
+            [],
+            $Processor->process()
+        );
+    }
 }
 
 class TestSalesReportContent
@@ -49,5 +87,21 @@ class TestSalesReportContent
     {
         $report = "Header 1\tHeader 2\tHeader 3\nFoo\tBar\tFoobar\nFizz\t\tFizzbuzz\n\tTest\tTester";
         return gzencode($report);
+    }
+}
+
+class TestSalesReportNoEncoding
+{
+    public function getContents()
+    {
+        return "Header 1\tHeader 2\tHeader 3\nFoo\tBar\tFoobar\nFizz\t\tFizzbuzz\n\tTest\tTester\nTotal\t100\nGrand Total\t500";
+    }
+}
+
+class TestSalesReportNoContent
+{
+    public function getContents()
+    {
+        return '';
     }
 }

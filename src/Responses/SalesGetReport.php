@@ -18,7 +18,10 @@ class SalesGetReport implements ResponseProcessor
             return [];
         }
 
-        $reportCSV = gzdecode($contents);
+        $reportCSV = @gzdecode($contents);
+        if (! isset($reportCSV) || ! $reportCSV) {
+            return [];
+        }
 
         $rows = explode("\n", $reportCSV);
         $headers = explode("\t", array_shift($rows));
