@@ -12,7 +12,7 @@ ITC Reporter is a PSR-2 compliant package used for getting data from iTunes Conn
 
 The current Autoingestion Tool will cease to work from the end of November 2016 and they recommended everyone switch to use the new Reporter tool in this [post](https://itunespartner.apple.com/en/apps/news/47110289).
 
-This is the first PHP Composer based port of the Reporter tool.
+This is the first PHP Composer based port of the Reporter tool and attempts to make using the tool and reports easier by processing the XML that is returned by the API and returning it as an Array to make usage easier.
 
 ## Requirements
 
@@ -28,3 +28,229 @@ And the following if you wish to run in dev mode and run tests.
 
 * "phpunit/phpunit": "~4.0"
 * "squizlabs/php_codesniffer": "~2.0"
+
+## Installation
+
+### Composer
+
+Simplest installation is via composer.
+
+	composer require snscripts/itc-reporter 1.*
+
+or adding to your projects `composer.json` file.
+
+	{
+	    "require": {
+	        "snscripts/itc-reporter": "1.*"
+	    }
+	}
+
+### Setup
+
+Instantiate the class as follows.
+
+	$Reporter = new \Snscripts\ITCReporter\Reporter(
+		new \GuzzleHttp\Client
+	);
+
+## Usage
+
+### Basics
+
+Aside from the main methods that return the data, all methods support chaining.
+
+To use the Reporter, you will need the user id and password for your iTunes Connect account, you set them as follows.
+
+	$Reporter->setUserId('me@example.com');
+	$Reporter->setPassword('securePassword!');
+	
+There are also "getter" methods to retrieve the currently set data.
+
+	$Reporter->getUserId();
+	$Reporter->getPassword();
+	
+Before progressing any further with this package, it will be worth while reviewing Apples Documentation at [https://help.apple.com/itc/appsreporterguide/](https://help.apple.com/itc/appsreporterguide/). 
+
+### Account Numbers
+
+Most actions require an account number also setting. You can retrieve the accounts your user has available for both "Sales & Trends" and "Payments & Financial Reports" by using the following functions.
+
+	$Reporter->getSalesAccounts();
+	$Reporter->getFinanceAccounts();
+	
+Both of these return data in the same array format. If you have no access to any accounts a blank array will be returned. If you do have access they will return an array in the following format.
+	
+	[
+	    1234567 => [
+	        'Name' => 'John Smith',
+	        'Number' => 1234567
+	    ],
+	    9876543 => [
+	        'Name' => 'Jane Doe',
+	        'Number' => 9876543
+	    ]
+	]
+
+The 'Number' element is the account number that is needed for the rest of the endpoints.
+
+You can set the account number you wish to use by calling;
+	
+	$Reporter->setAccountNum(1234567);
+	
+You can then also retrieve the currently set account number with:
+	
+	$Reporter->getAccountNumber();
+	
+### Vendor Number
+
+One last ID needed before a report can be retrieved is the Vendor number. Before you can get the list of vendors an Account Number does need to be set.
+
+Once an Account Number is set you can get the Vendors for both "Sales & Trends" and "Payments & Financial Reports", the data returned for Sales & Trends Vendors differs from Payments & Financial Vendors.
+
+In both instances, if no vendors exists, a blank array will be returned.
+
+#### Sales Vendors
+
+Use the following function to get the Vendors for the Sales & Trends
+
+	$Reporter->getSalesVendors();
+	
+This will return a simple array of Vendor numbers.
+
+	[
+        1234567,
+        9876543
+    ]
+
+#### Finance Vendors
+
+Use the following function get the Vendors for the Payments & Financial Reports.
+
+	$Reporter->getFinanceVendors();
+	
+This returns a slightly more complicated array, detailing the Vendor, the Region Codes available and the Reports available for each Region Code.
+
+    [
+        1234567 => [
+            'Number' => 1234567,
+            'Regions' => [
+                'AE' => [
+                    'Code' => 'AE',
+                    'Reports' => [
+                        'Financial'
+                    ]
+                ],
+                'AU' => [
+                    'Code' => 'AU',
+                    'Reports' => [
+                        'Financial'
+                    ]
+                ]
+            ]
+        ],
+        9876543 => [
+            'Number' => 9876543,
+            'Regions' => [
+                'EU' => [
+                    'Code' => 'EU',
+                    'Reports' => [
+                        'Financial'
+                    ]
+                ]
+            ]
+        ]
+    ]
+
+### Reports
+
+Both Sales Reports and the Financial Reports require specific data regarding the type of report you want. Consult the documentation for each section so you know what parameters are available.
+
+#### Sales Report
+
+For Sales reports, consult the documentation [here](https://help.apple.com/itc/appsreporterguide/#/itcbd9ed14ac) to view descriptions of the parameters.
+
+To get reports call the method in the following way:
+
+	$Reporter->getSalesReport(
+		$vendorNum,
+		$reportType,
+		$reportSubType,
+		$dateType,
+		$date
+	);
+	
+An actual call may look something like this:
+
+	$Reporter->getSalesReport(
+		1234567,
+		'Sales',
+		'Summary',
+		'Daily',
+		'20161025' //YYYYMMDD
+	);
+	
+If nothing was found or a problem occurred, a blank array will be returned. If the report does have data an array similar to below will be returned.
+
+	[
+        [
+            [Provider] => APPLE
+            [Provider Country] => US
+            [SKU] => 12345678901
+            [Developer] => John Smith
+            [Title] => My App
+            [Version] => 2.0.1
+            [Product Type Identifier] => 1F
+            [Units] => 1
+            [Developer Proceeds] => 0
+            [Begin Date] => 10/23/2016
+            [End Date] => 10/23/2016
+            [Customer Currency] => AUD
+            [Country Code] => AU
+            [Currency of Proceeds] => AUD
+            [Apple Identifier] => 123456789
+            [Customer Price] => 0
+            [Promo Code] =>  
+            [Parent Identifier] =>  
+            [Subscription] =>  
+            [Period] =>  
+            [Category] => Travel
+            [CMB] => 
+            [Device] => iPad
+            [Supported Platforms] => iOS
+            [Proceeds Reason] =>  
+            [Preserved Pricing] =>  
+            [Client] =>  
+        ],
+        [
+            [Provider] => APPLE
+            [Provider Country] => US
+            [SKU] => 12345678901
+            [Developer] => John Smith
+            [Title] => My App
+            [Version] => 2.0.1
+            [Product Type Identifier] => 3F
+            [Units] => 1
+            [Developer Proceeds] => 0
+            [Begin Date] => 10/23/2016
+            [End Date] => 10/23/2016
+            [Customer Currency] => USD
+            [Country Code] => BR
+            [Currency of Proceeds] => USD
+            [Apple Identifier] => 123456789
+            [Customer Price] => 0
+            [Promo Code] =>  
+            [Parent Identifier] =>  
+            [Subscription] =>  
+            [Period] =>  
+            [Category] => Travel
+            [CMB] => 
+            [Device] => iPhone
+            [Supported Platforms] => iOS
+            [Proceeds Reason] =>  
+            [Preserved Pricing] =>  
+            [Client] =>
+        ]
+	]    
+
+
+
