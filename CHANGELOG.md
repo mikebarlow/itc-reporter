@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.0] - 2016-12-08
+
+* [Feature] Added ability to retrieve the last result object after a request using `$Reporter->getLastResult();`
+
 ## [1.0.1] - 2016-12-08
 
 * [Bugfix] Increasing version number and setting user agent of request to Java version number to requests work

@@ -63,13 +63,13 @@ To use the Reporter, you will need the user id and password for your iTunes Conn
 
 	$Reporter->setUserId('me@example.com');
 	$Reporter->setPassword('securePassword!');
-	
+
 There are also "getter" methods to retrieve the currently set data.
 
 	$Reporter->getUserId();
 	$Reporter->getPassword();
-	
-Before progressing any further with this package, it will be worth while reviewing Apples Documentation at [https://help.apple.com/itc/appsreporterguide/](https://help.apple.com/itc/appsreporterguide/). 
+
+Before progressing any further with this package, it will be worth while reviewing Apples Documentation at [https://help.apple.com/itc/appsreporterguide/](https://help.apple.com/itc/appsreporterguide/).
 
 ### Account Numbers
 
@@ -77,9 +77,9 @@ Most actions require an account number also setting. You can retrieve the accoun
 
 	$Reporter->getSalesAccounts();
 	$Reporter->getFinanceAccounts();
-	
+
 Both of these return data in the same array format. If you have no access to any accounts a blank array will be returned. If you do have access they will return an array in the following format.
-	
+
 	[
 	    1234567 => [
 	        'Name' => 'John Smith',
@@ -94,13 +94,13 @@ Both of these return data in the same array format. If you have no access to any
 The 'Number' element is the account number that is needed for the rest of the endpoints.
 
 You can set the account number you wish to use by calling;
-	
+
 	$Reporter->setAccountNum(1234567);
-	
+
 You can then also retrieve the currently set account number with:
-	
+
 	$Reporter->getAccountNumber();
-	
+
 ### Vendor Number
 
 One last ID needed before a report can be retrieved is the Vendor number. Before you can get the list of vendors an Account Number does need to be set.
@@ -114,7 +114,7 @@ In both instances, if no vendors exists, a blank array will be returned.
 Use the following function to get the Vendors for the Sales & Trends
 
 	$Reporter->getSalesVendors();
-	
+
 This will return a simple array of Vendor numbers.
 
 	[
@@ -127,7 +127,7 @@ This will return a simple array of Vendor numbers.
 Use the following function get the Vendors for the Payments & Financial Reports.
 
 	$Reporter->getFinanceVendors();
-	
+
 This returns a slightly more complicated array, detailing the Vendor, the Region Codes available and the Reports available for each Region Code.
 
     [
@@ -178,7 +178,7 @@ To get reports call the method in the following way:
 		$dateType,
 		$date
 	);
-	
+
 An actual call may look something like this:
 
 	$Reporter->getSalesReport(
@@ -188,7 +188,7 @@ An actual call may look something like this:
 		'Daily',
 		'20161025' //YYYYMMDD
 	);
-	
+
 If nothing was found or a problem occurred, a blank array will be returned. If the report does have data an array similar to below will be returned.
 
 	[
@@ -209,17 +209,17 @@ If nothing was found or a problem occurred, a blank array will be returned. If t
             [Currency of Proceeds] => AUD
             [Apple Identifier] => 123456789
             [Customer Price] => 0
-            [Promo Code] =>  
-            [Parent Identifier] =>  
-            [Subscription] =>  
-            [Period] =>  
+            [Promo Code] =>
+            [Parent Identifier] =>
+            [Subscription] =>
+            [Period] =>
             [Category] => Travel
-            [CMB] => 
+            [CMB] =>
             [Device] => iPad
             [Supported Platforms] => iOS
-            [Proceeds Reason] =>  
-            [Preserved Pricing] =>  
-            [Client] =>  
+            [Proceeds Reason] =>
+            [Preserved Pricing] =>
+            [Client] =>
         ],
         [
             [Provider] => APPLE
@@ -238,19 +238,19 @@ If nothing was found or a problem occurred, a blank array will be returned. If t
             [Currency of Proceeds] => USD
             [Apple Identifier] => 123456789
             [Customer Price] => 0
-            [Promo Code] =>  
-            [Parent Identifier] =>  
-            [Subscription] =>  
-            [Period] =>  
+            [Promo Code] =>
+            [Parent Identifier] =>
+            [Subscription] =>
+            [Period] =>
             [Category] => Travel
-            [CMB] => 
+            [CMB] =>
             [Device] => iPhone
             [Supported Platforms] => iOS
-            [Proceeds Reason] =>  
-            [Preserved Pricing] =>  
+            [Proceeds Reason] =>
+            [Preserved Pricing] =>
             [Client] =>
         ]
-	]    
+	]
 
 #### Financials- Report
 
@@ -265,7 +265,7 @@ To get reports call the method in the following way:
 		$fiscalYear,
 		$fiscalPeriod
 	);
-	
+
 An actual call may look something like this:
 
 	$Reporter->getSalesReport(
@@ -275,15 +275,15 @@ An actual call may look something like this:
 		'2016',
 		'1' //YYYYMMDD
 	);
-	
+
 If nothing was found or a problem occurred, a blank array will be returned. If the report does have data an array similar to below will be returned.
 
 	[
 	    [
 	        [Start Date] => 09/27/2015
 	        [End Date] => 10/31/2015
-	        [UPC] => 
-	        [ISRC/ISBN] => 
+	        [UPC] =>
+	        [ISRC/ISBN] =>
 	        [Vendor Identifier] => 123456789012
 	        [Quantity] => 22
 	        [Partner Share] => 0.46
@@ -293,21 +293,21 @@ If nothing was found or a problem occurred, a blank array will be returned. If t
 	        [Apple Identifier] => 123456789
 	        [Artist/Show/Developer/Author] => John Smith
 	        [Title] => My App
-	        [Label/Studio/Network/Developer/Publisher] => 
-	        [Grid] => 
+	        [Label/Studio/Network/Developer/Publisher] =>
+	        [Grid] =>
 	        [Product Type Identifier] => 1
-	        [ISAN/Other Identifier] => 
+	        [ISAN/Other Identifier] =>
 	        [Country Of Sale] => GB
-	        [Pre-order Flag] => 
-	        [Promo Code] => 
+	        [Pre-order Flag] =>
+	        [Promo Code] =>
 	        [Customer Price] => 0.79
 	        [Customer Currency] => GBP
 	    ],
-	    [            
+	    [
 	        [Start Date] => 09/27/2015
 	        [End Date] => 10/31/2015
-	        [UPC] => 
-	        [ISRC/ISBN] => 
+	        [UPC] =>
+	        [ISRC/ISBN] =>
 	        [Vendor Identifier] => 123789456
 	        [Quantity] => 1
 	        [Partner Share] => 0.46
@@ -317,13 +317,13 @@ If nothing was found or a problem occurred, a blank array will be returned. If t
 	        [Apple Identifier] => 987654321
 	        [Artist/Show/Developer/Author] => John Smith
 	        [Title] => My App 2
-	        [Label/Studio/Network/Developer/Publisher] => 
-	        [Grid] => 
+	        [Label/Studio/Network/Developer/Publisher] =>
+	        [Grid] =>
 	        [Product Type Identifier] => 1F
-	        [ISAN/Other Identifier] => 
+	        [ISAN/Other Identifier] =>
 	        [Country Of Sale] => GB
-	        [Pre-order Flag] => 
-	        [Promo Code] => 
+	        [Pre-order Flag] =>
+	        [Promo Code] =>
 	        [Customer Price] => 0.79
 	        [Customer Currency] => GBP
 	    ],
@@ -331,7 +331,24 @@ If nothing was found or a problem occurred, a blank array will be returned. If t
 	    [Total_Amount] => 28.32
 	    [Total_Units] => 58
 	]
-	
+
+## Debugging
+
+If you've run a method to get a report or account / vendor numbers to find you are not getting the results expected, you can retrieve the last Result object returned, this method should contain any information relating to why a request may have failed.
+
+    $Reporter = new \Snscripts\ITCReporter\Reporter(
+        new \GuzzleHttp\Client
+    );
+
+    $Reporter->setUserId('user@email.com')
+        ->setPassword('password');
+
+    $failedAccounts = $Reporter->getSalesAccount();
+
+    $Result = $Reporter->getLastResult();
+
+If no action has been run, the result will return a `null` value.
+
 ## Changelog
 
 You can view the changelog [HERE](https://github.com/mikebarlow/itc-reporter/blob/master/CHANGELOG.md)
