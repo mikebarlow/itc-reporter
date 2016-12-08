@@ -119,7 +119,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             ->setPassword('mypassword!');
 
         $this->assertSame(
-            '{"userid":"me@example.com","password":"mypassword!","version":"1.0","mode":"Robot.XML","account":"None","queryInput":"[p=Reporter.properties, Sales.getAccounts]"}',
+            '{"userid":"me@example.com","password":"mypassword!","version":"2.0","mode":"Robot.XML","account":"None","queryInput":"[p=Reporter.properties, Sales.getAccounts]"}',
             $Reporter->buildJsonRequest('Sales.getAccounts')
         );
     }
@@ -135,7 +135,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             ->setAccountNum(1234567);
 
         $this->assertSame(
-            '{"userid":"me@example.com","password":"mypassword!","version":"1.0","mode":"Robot.XML","account":"1234567","queryInput":"[p=Reporter.properties, Sales.getVendors]"}',
+            '{"userid":"me@example.com","password":"mypassword!","version":"2.0","mode":"Robot.XML","account":"1234567","queryInput":"[p=Reporter.properties, Sales.getVendors]"}',
             $Reporter->buildJsonRequest('Sales.getVendors')
         );
     }
@@ -150,7 +150,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             ->setPassword('mypassword!');
 
         $this->assertSame(
-            '{"userid":"me@example.com","password":"mypassword!","version":"1.0","mode":"Robot.XML","account":"None","queryInput":"[p=Reporter.properties, Sales.getReport, 12345678,Sales,Summary,Daily,20161020]"}',
+            '{"userid":"me@example.com","password":"mypassword!","version":"2.0","mode":"Robot.XML","account":"None","queryInput":"[p=Reporter.properties, Sales.getReport, 12345678,Sales,Summary,Daily,20161020]"}',
             $Reporter->buildJsonRequest('Sales.getReport', '12345678', 'Sales', 'Summary', 'Daily', '20161020')
         );
     }
