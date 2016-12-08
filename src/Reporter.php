@@ -25,6 +25,7 @@ class Reporter
         'Finance.getVendorsAndRegions' => '\Snscripts\ITCReporter\Responses\FinanceGetVendors',
         'Finance.getReport'            => '\Snscripts\ITCReporter\Responses\FinanceGetReport'
     ];
+    protected $lastResult = null;
 
     /**
      * constructor - setup guzzle dependency
@@ -45,7 +46,7 @@ class Reporter
     {
         $json = $this->buildJsonRequest('Sales.getAccounts');
 
-        $Result = $this->performRequest(self::SALESURL, $json);
+        $this->lastResult = $Result = $this->performRequest(self::SALESURL, $json);
 
         if ($Result->isSuccess()) {
             return $this->processResponse(
@@ -66,7 +67,7 @@ class Reporter
     {
         $json = $this->buildJsonRequest('Sales.getVendors');
 
-        $Result = $this->performRequest(self::SALESURL, $json);
+        $this->lastResult = $Result = $this->performRequest(self::SALESURL, $json);
 
         if ($Result->isSuccess()) {
             return $this->processResponse(
@@ -107,7 +108,7 @@ class Reporter
             $date
         );
 
-        $Result = $this->performRequest(self::SALESURL, $json);
+        $this->lastResult = $Result = $this->performRequest(self::SALESURL, $json);
 
         if ($Result->isSuccess()) {
             return $this->processResponse(
@@ -128,7 +129,7 @@ class Reporter
     {
         $json = $this->buildJsonRequest('Finance.getAccounts');
 
-        $Result = $this->performRequest(self::FINANCEURL, $json);
+        $this->lastResult = $Result = $this->performRequest(self::FINANCEURL, $json);
 
         if ($Result->isSuccess()) {
             return $this->processResponse(
@@ -149,7 +150,7 @@ class Reporter
     {
         $json = $this->buildJsonRequest('Finance.getVendorsAndRegions');
 
-        $Result = $this->performRequest(self::FINANCEURL, $json);
+        $this->lastResult = $Result = $this->performRequest(self::FINANCEURL, $json);
 
         if ($Result->isSuccess()) {
             return $this->processResponse(
@@ -190,7 +191,7 @@ class Reporter
             $period
         );
 
-        $Result = $this->performRequest(self::FINANCEURL, $json);
+        $this->lastResult = $Result = $this->performRequest(self::FINANCEURL, $json);
 
         if ($Result->isSuccess()) {
             return $this->processResponse(
@@ -300,6 +301,16 @@ class Reporter
         );
 
         return $ResponseProcesser->process();
+    }
+
+    /**
+     * get the last result set
+     *
+     * @return Result|null
+     */
+    public function getLastResult()
+    {
+        return $this->lastResult;
     }
 
     /**

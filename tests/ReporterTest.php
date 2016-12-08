@@ -664,6 +664,37 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             $Reporter->getFinanceReport(1234567, 'GB', 'Financial', '2016', '1')
         );
     }
+
+    public function testGetLastResultReturnsCorrectValue()
+    {
+        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response->method('getBody')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>');
+        $Response->method('getStatusCode')
+            ->willReturn(200);
+
+        $GuzzleMock = $this->getMock('GuzzleHttp\ClientInterface');
+        $GuzzleMock->method('request')
+            ->willReturn(
+                $Response
+            );
+
+        $Reporter = new Reporter(
+            $GuzzleMock
+        );
+        $Reporter->setUserId('me@me.com')->setPassword('123qaz');
+
+        $this->assertNull(
+            $Reporter->getLastResult()
+        );
+
+        $accounts = $Reporter->getSalesAccounts();
+
+        $this->assertInstanceOf(
+            'Snscripts\Result\Result',
+            $Reporter->getLastResult()
+        );
+    }
 }
 
 class TestSalesReportContent
