@@ -10,7 +10,7 @@ class Reporter
     const
         SALESURL   = 'https://reportingitc-reporter.apple.com/reportservice/sales/v1',
         FINANCEURL = 'https://reportingitc-reporter.apple.com/reportservice/finance/v1',
-        VERSION    = '1.0',
+        VERSION    = '2.0',
         MODE       = 'Robot.XML';
 
     protected $userid;
@@ -256,6 +256,10 @@ class Reporter
                 [
                     'form_params' => [
                         'jsonRequest' => $jsonRequest
+                    ],
+                    'headers' => [
+                        'User-Agent' => 'Java/1.8.0_92',
+                        'Accept' => 'text/xml, text/plain'
                     ]
                 ]
             );
