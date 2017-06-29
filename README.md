@@ -35,13 +35,13 @@ And the following if you wish to run in dev mode and run tests.
 
 Simplest installation is via composer.
 
-	composer require snscripts/itc-reporter 1.*
+	composer require snscripts/itc-reporter 2.*
 
 or adding to your projects `composer.json` file.
 
 	{
 	    "require": {
-	        "snscripts/itc-reporter": "1.*"
+	        "snscripts/itc-reporter": "2.*"
 	    }
 	}
 

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0] - 2017-06-29
+
+* [Update] Amended login for the ITC Reporter to use access tokens rather than email / password
+
 ## [1.1.0] - 2016-12-08
 
 * [Feature] Added ability to retrieve the last result object after a request using `$Reporter->getLastResult();`
