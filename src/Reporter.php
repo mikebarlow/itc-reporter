@@ -222,7 +222,7 @@ class Reporter
         }
 
         $json = [
-            'access_token' => $this->access_token,
+            'accesstoken' => $this->access_token,
             'version'      => self::VERSION,
             'mode'         => self::MODE,
             'account'      => (string)$this->account
