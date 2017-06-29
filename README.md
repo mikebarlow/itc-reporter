@@ -59,15 +59,13 @@ Instantiate the class as follows.
 
 Aside from the main methods that return the data, all methods support chaining.
 
-To use the Reporter, you will need the user id and password for your iTunes Connect account, you set them as follows.
+To use the Reporter, you will need the an access token for your iTunes Connect account. This is obtained from the [iTunes Connect Sales and Trends screen](https://reportingitc2.apple.com/reports.html), as described in the [Reporter documentation](https://help.apple.com/itc/appsreporterguide/#/apd2f1f1cfa3). Set the access token as follows.
 
-	$Reporter->setUserId('me@example.com');
-	$Reporter->setPassword('securePassword!');
+	$Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd');
 
 There are also "getter" methods to retrieve the currently set data.
 
-	$Reporter->getUserId();
-	$Reporter->getPassword();
+	$Reporter->getAccessToken();
 
 Before progressing any further with this package, it will be worth while reviewing Apples Documentation at [https://help.apple.com/itc/appsreporterguide/](https://help.apple.com/itc/appsreporterguide/).
 
@@ -340,8 +338,7 @@ If you've run a method to get a report or account / vendor numbers to find you a
         new \GuzzleHttp\Client
     );
 
-    $Reporter->setUserId('user@email.com')
-        ->setPassword('password');
+    $Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd');
 
     $failedAccounts = $Reporter->getSalesAccount();
 
