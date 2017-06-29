@@ -10,11 +10,12 @@ class Reporter
     const
         SALESURL   = 'https://reportingitc-reporter.apple.com/reportservice/sales/v1',
         FINANCEURL = 'https://reportingitc-reporter.apple.com/reportservice/finance/v1',
-        VERSION    = '2.0',
+        VERSION    = '2.1',
         MODE       = 'Robot.XML';
 
     protected $userid;
     protected $password;
+    protected $access_token;
     protected $account = 'None';
     protected $Guzzle;
     protected $responses = [
@@ -221,11 +222,10 @@ class Reporter
         }
 
         $json = [
-            'userid'   => $this->userid,
-            'password' => $this->password,
-            'version'  => self::VERSION,
-            'mode'     => self::MODE,
-            'account'  => (string)$this->account
+            'accesstoken' => $this->access_token,
+            'version'      => self::VERSION,
+            'mode'         => self::MODE,
+            'account'      => (string)$this->account
         ];
 
         // build up the action and parameters we actually want to perform
@@ -314,60 +314,6 @@ class Reporter
     }
 
     /**
-     * set the user id
-     *
-     * @param string $userid
-     * @return Reporter $this
-     * @throws \InvalidArgumentException
-     */
-    public function setUserId($userid)
-    {
-        if (empty($userid) || ! is_string($userid)) {
-            throw new \InvalidArgumentException('Argument passed to Reporter::setUser was not a string');
-        }
-
-        $this->userid = $userid;
-        return $this;
-    }
-
-    /**
-     * return the user id currently set
-     *
-     * @return string $userid
-     */
-    public function getUserId()
-    {
-        return $this->userid;
-    }
-
-    /**
-     * set the password
-     *
-     * @param string $password
-     * @return Reporter $this
-     * @throws \InvalidArgumentException
-     */
-    public function setPassword($password)
-    {
-        if (empty($password) || ! is_string($password)) {
-            throw new \InvalidArgumentException('Argument passed to Reporter::setPassword was not a string');
-        }
-
-        $this->password = $password;
-        return $this;
-    }
-
-    /**
-     * return the password currently set
-     *
-     * @return string $password
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
      * set the account num to use
      *
      * @param string $account
@@ -394,5 +340,32 @@ class Reporter
     public function getAccountNum()
     {
         return $this->account;
+    }
+
+    /**
+     * set the access key to use
+     *
+     * @param string $access_token
+     * @return Reporter $this
+     * @throws \InvalidArgumentException
+     */
+    public function setAccessToken($access_token)
+    {
+        if (empty($access_token) || ! is_string($access_token)) {
+            throw new \InvalidArgumentException('Argument passed to Reporter::setAccessToken was not a string');
+        }
+
+        $this->access_token = $access_token;
+        return $this;
+    }
+
+    /**
+     * return the access key currently set
+     *
+     * @return string $access_token
+     */
+    public function getAccessToken()
+    {
+        return $this->access_token;
     }
 }

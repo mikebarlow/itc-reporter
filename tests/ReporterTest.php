@@ -17,7 +17,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testCanSetAndGetUserId()
+    public function testCanSetAndGetAccessToken()
     {
         $Reporter = new Reporter(
             new Client
@@ -25,16 +25,16 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(
             'Snscripts\ITCReporter\Reporter',
-            $Reporter->setUserId('me@example.com')
+            $Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd')
         );
 
         $this->assertSame(
-            'me@example.com',
-            $Reporter->getUserId()
+            '12345678-1234-abcd-abcd-12345678abcd',
+            $Reporter->getAccessToken()
         );
     }
 
-    public function testSetUserIdThrowsExceptionWithInvalidData()
+    public function testSetAccessTokenThrowsExceptionWithInvalidData()
     {
         $this->setExpectedException('InvalidArgumentException');
 
@@ -42,41 +42,10 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             new Client
         );
 
-        $Reporter->setUserId(123);
-        $Reporter->setUserId([]);
-        $Reporter->setUserId(new \StdClass);
-        $Reporter->setUserId('');
-    }
-
-    public function testCanSetAndGetPassword()
-    {
-        $Reporter = new Reporter(
-            new Client
-        );
-
-        $this->assertInstanceOf(
-            'Snscripts\ITCReporter\Reporter',
-            $Reporter->setPassword('?S3cureP455Word!')
-        );
-
-        $this->assertSame(
-            '?S3cureP455Word!',
-            $Reporter->getPassword()
-        );
-    }
-
-    public function testSetPasswordThrowsExceptionWithInvalidData()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-
-        $Reporter = new Reporter(
-            new Client
-        );
-
-        $Reporter->setPassword(123);
-        $Reporter->setPassword([]);
-        $Reporter->setPassword(new \StdClass);
-        $Reporter->setPassword('');
+        $Reporter->setAccessToken(123);
+        $Reporter->setAccessToken([]);
+        $Reporter->setAccessToken(new \StdClass);
+        $Reporter->setAccessToken('');
     }
 
     public function testCanSetAndGetAccount()
@@ -115,11 +84,10 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             new Client
         );
 
-        $Reporter->setUserId('me@example.com')
-            ->setPassword('mypassword!');
+        $Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd');
 
         $this->assertSame(
-            '{"userid":"me@example.com","password":"mypassword!","version":"2.0","mode":"Robot.XML","account":"None","queryInput":"[p=Reporter.properties, Sales.getAccounts]"}',
+            '{"accesstoken":"12345678-1234-abcd-abcd-12345678abcd","version":"2.1","mode":"Robot.XML","account":"None","queryInput":"[p=Reporter.properties, Sales.getAccounts]"}',
             $Reporter->buildJsonRequest('Sales.getAccounts')
         );
     }
@@ -130,12 +98,11 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             new Client
         );
 
-        $Reporter->setUserId('me@example.com')
-            ->setPassword('mypassword!')
+        $Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd')
             ->setAccountNum(1234567);
 
         $this->assertSame(
-            '{"userid":"me@example.com","password":"mypassword!","version":"2.0","mode":"Robot.XML","account":"1234567","queryInput":"[p=Reporter.properties, Sales.getVendors]"}',
+            '{"accesstoken":"12345678-1234-abcd-abcd-12345678abcd","version":"2.1","mode":"Robot.XML","account":"1234567","queryInput":"[p=Reporter.properties, Sales.getVendors]"}',
             $Reporter->buildJsonRequest('Sales.getVendors')
         );
     }
@@ -146,11 +113,10 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             new Client
         );
 
-        $Reporter->setUserId('me@example.com')
-            ->setPassword('mypassword!');
+        $Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd');
 
         $this->assertSame(
-            '{"userid":"me@example.com","password":"mypassword!","version":"2.0","mode":"Robot.XML","account":"None","queryInput":"[p=Reporter.properties, Sales.getReport, 12345678,Sales,Summary,Daily,20161020]"}',
+            '{"accesstoken":"12345678-1234-abcd-abcd-12345678abcd","version":"2.1","mode":"Robot.XML","account":"None","queryInput":"[p=Reporter.properties, Sales.getReport, 12345678,Sales,Summary,Daily,20161020]"}',
             $Reporter->buildJsonRequest('Sales.getReport', '12345678', 'Sales', 'Summary', 'Daily', '20161020')
         );
     }
@@ -163,8 +129,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
             new Client
         );
 
-        $Reporter->setUserId('me@example.com')
-            ->setPassword('mypassword!')
+        $Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd')
             ->setAccountNum(1234567)
             ->buildJsonRequest();
     }
@@ -237,7 +202,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
         $Reporter = new Reporter(
             $GuzzleMock
         );
-        $Reporter->setUserId('me@me.com')->setPassword('123qaz');
+        $Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd');
 
         $Result = $Reporter->performRequest(
             Reporter::SALESURL,
@@ -281,7 +246,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
         $Reporter = new Reporter(
             $GuzzleMock
         );
-        $Reporter->setUserId('me@me.com')->setPassword('123qaz');
+        $Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd');
 
         $Result = $Reporter->performRequest(
             Reporter::SALESURL,
@@ -682,7 +647,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
         $Reporter = new Reporter(
             $GuzzleMock
         );
-        $Reporter->setUserId('me@me.com')->setPassword('123qaz');
+        $Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd');
 
         $this->assertNull(
             $Reporter->getLastResult()
