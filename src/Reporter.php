@@ -15,7 +15,7 @@ class Reporter
 
     protected $userid;
     protected $password;
-    protected $access_key;
+    protected $access_token;
     protected $account = 'None';
     protected $Guzzle;
     protected $responses = [
@@ -222,10 +222,10 @@ class Reporter
         }
 
         $json = [
-            'access_key' =>	$this->access_key,
-            'version'    => self::VERSION,
-            'mode'       => self::MODE,
-            'account'    => (string)$this->account
+            'access_token' => $this->access_token,
+            'version'      => self::VERSION,
+            'mode'         => self::MODE,
+            'account'      => (string)$this->account
         ];
 
         // build up the action and parameters we actually want to perform
@@ -345,27 +345,27 @@ class Reporter
     /**
      * set the access key to use
      *
-     * @param string $access_key
+     * @param string $access_token
      * @return Reporter $this
      * @throws \InvalidArgumentException
      */
-    public function setAccessKey($access_key)
+    public function setAccessToken($access_token)
     {
-        if (empty($access_key) || ! is_string($access_key)) {
-            throw new \InvalidArgumentException('Argument passed to Reporter::setAccessKey was not a string');
+        if (empty($access_token) || ! is_string($access_token)) {
+            throw new \InvalidArgumentException('Argument passed to Reporter::setAccessToken was not a string');
         }
 
-        $this->access_key = $access_key;
+        $this->access_token = $access_token;
         return $this;
     }
 
     /**
      * return the access key currently set
      *
-     * @return string $access_key
+     * @return string $access_token
      */
-    public function getAccessKey()
+    public function getAccessToken()
     {
-        return $this->access_key;
+        return $this->access_token;
     }
 }
