@@ -21,7 +21,7 @@ This is the first PHP Composer based port of the Reporter tool and attempts to m
 ITC-Reporter requires the following:
 
 * "php": ">=5.5.0"
-* "guzzlehttp/guzzle": "6.2.*"
+* "guzzlehttp/guzzle": "6.*"
 * "snscripts/result": "1.0.*"
 
 And the following if you wish to run in dev mode and run tests.

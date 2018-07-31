@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "guzzlehttp/guzzle": "6.2.*",
+        "guzzlehttp/guzzle": "6.*",
         "snscripts/result": "1.0.*"
     },
     "require-dev": {
