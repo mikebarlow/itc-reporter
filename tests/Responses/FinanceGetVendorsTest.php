@@ -7,7 +7,7 @@ class FinanceGetVendorsTest extends \PHPUnit_Framework_TestCase
 {
     public function testProcessReturnsCorrectValueForSingleFinanceVendor()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><VendorsAndRegions><Vendor><Number>1234567</Number><Region><Code>AE</Code><Reports><Report>Financial</Report></Reports></Region><Region><Code>AU</Code><Reports><Report>Financial</Report><Report>Sale</Report></Reports></Region></Vendor></VendorsAndRegions>');
 
@@ -42,7 +42,7 @@ class FinanceGetVendorsTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsCorrectValueForMultipleFinanceVendor()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><VendorsAndRegions><Vendor><Number>1234567</Number><Region><Code>AE</Code><Reports><Report>Financial</Report></Reports></Region><Region><Code>AU</Code><Reports><Report>Financial</Report><Report>Sale</Report></Reports></Region></Vendor><Vendor><Number>9876543</Number><Region><Code>EU</Code><Reports><Report>Financial</Report><Report>Sale</Report></Reports></Region></Vendor></VendorsAndRegions>');
 
@@ -89,7 +89,7 @@ class FinanceGetVendorsTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsEmptyArrayForInvalidXML()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><VendorsAndRegions>Number>1234567</Number><Region><Code>AE</Code><Reports><Report>Financial</Report></Reports></Region>AU</Code><Reports><Report>Financial</Report><Report>Sale</Report></Reports></Region></Vendor></VendorsAndRegions>');
 
@@ -105,7 +105,7 @@ class FinanceGetVendorsTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsEmptyArrayForEmptyContents()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn('');
 

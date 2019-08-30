@@ -7,7 +7,7 @@ class FinanceGetAccountsTest extends \PHPUnit_Framework_TestCase
 {
     public function testProcessReturnsCorrectValueForSingleFinanceAccount()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>');
 
@@ -28,7 +28,7 @@ class FinanceGetAccountsTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsCorrectValueForMultipleFinanceAccount()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account><Account><Name>Jane Doe</Name><Number>9876543</Number></Account></Accounts>');
 
@@ -53,7 +53,7 @@ class FinanceGetAccountsTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsEmptyArrayForInvalidXML()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith 1234567</Number></Account><Account><Name>Jane Doe</Name><Number>9876543</Number></Accounts>');
 
@@ -69,7 +69,7 @@ class FinanceGetAccountsTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsEmptyArrayForEmptyContents()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn('');
 

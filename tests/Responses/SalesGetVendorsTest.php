@@ -7,7 +7,7 @@ class SalesGetVendorsTest extends \PHPUnit_Framework_TestCase
 {
     public function testProcessReturnsCorrectValueForSingleSalesVendor()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor></Vendors>');
 
@@ -25,7 +25,7 @@ class SalesGetVendorsTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsCorrectValueForMultipleSalesVendor()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>');
 
@@ -44,7 +44,7 @@ class SalesGetVendorsTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsEmptyArrayForInvalidXML()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors>1234567</Vendor><dor>9876543</Vendor></Vendors>');
 
@@ -60,7 +60,7 @@ class SalesGetVendorsTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsEmptyArrayForEmptyContents()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn('');
 
