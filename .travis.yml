@@ -11,8 +11,10 @@ matrix:
 
 before_script:
   - travis_retry composer self-update
-  - travis_retry composer install --no-interaction --prefer-source --dev
+  - travis_retry composer install --no-interaction --prefer-source
 
 script:
-  - if [[ "$TRAVIS_PHP_VERSION" == '7.1' ]]; then vendor/bin/phpunit
-  - if [[ "$TRAVIS_PHP_VERSION" != '7.1' ]]; then phpunit
+  - if [ "$TRAVIS_PHP_VERSION" == '7.1' ];
+    then vendor/bin/phpunit
+  - if [ "$TRAVIS_PHP_VERSION" != '7.1' ];
+    then phpunit
