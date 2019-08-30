@@ -261,7 +261,8 @@ class Reporter
                     'headers' => [
                         'User-Agent' => 'Java/1.8.0_92',
                         'Accept' => 'text/xml, text/plain'
-                    ]
+                    ],
+                    'decode_content' => false
                 ]
             );
 
