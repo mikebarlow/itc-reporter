@@ -97,7 +97,7 @@ You can set the account number you wish to use by calling;
 
 You can then also retrieve the currently set account number with:
 
-	$Reporter->getAccountNumber();
+	$Reporter->getAccountNum();
 
 ### Vendor Number
 

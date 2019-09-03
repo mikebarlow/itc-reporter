@@ -7,7 +7,7 @@ class FinanceGetReportTest extends \PHPUnit_Framework_TestCase
 {
     public function testProcessReturnsReportInArrayFormat()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn(
                 new TestFinanceReportContent
@@ -43,7 +43,7 @@ class FinanceGetReportTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsEmptyArrayWhenContentsEmpty()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn(
                 new TestFinanceReportNoContent
@@ -61,7 +61,7 @@ class FinanceGetReportTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsEmptyArrayIfFileIsNotGZipped()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn(
                 new TestFinanceReportNoEncoding

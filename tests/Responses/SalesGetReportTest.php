@@ -12,7 +12,7 @@ class SalesGetReportTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsReportInArrayFormat()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn(
                 new TestSalesReportContent
@@ -46,7 +46,7 @@ class SalesGetReportTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsEmptyArrayWhenContentsEmpty()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn(
                 new TestSalesReportNoContent
@@ -64,7 +64,7 @@ class SalesGetReportTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessReturnsEmptyArrayIfFileIsNotGZipped()
     {
-        $Response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
             ->willReturn(
                 new TestSalesReportNoEncoding
