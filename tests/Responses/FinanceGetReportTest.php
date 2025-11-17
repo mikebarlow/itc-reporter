@@ -1,17 +1,19 @@
 <?php
 namespace Snscripts\ITCReporter\Tests\Responses;
 
+use GuzzleHttp\Psr7\Utils;
+use PHPUnit\Framework\TestCase;
 use Snscripts\ITCReporter\Responses\FinanceGetReport;
 
-class FinanceGetReportTest extends \PHPUnit_Framework_TestCase
+class FinanceGetReportTest extends TestCase
 {
     public function testProcessReturnsReportInArrayFormat()
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn(
-                new TestFinanceReportContent
-            );
+            ->willReturn(Utils::streamFor(
+                (new TestFinanceReportContent)->getContents()
+            ));
 
         $Processor = new FinanceGetReport(
             $Response
@@ -45,9 +47,9 @@ class FinanceGetReportTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn(
-                new TestFinanceReportNoContent
-            );
+            ->willReturn(Utils::streamFor(
+                (new TestFinanceReportNoContent)->getContents()
+            ));
 
         $Processor = new FinanceGetReport(
             $Response
@@ -63,9 +65,9 @@ class FinanceGetReportTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn(
-                new TestFinanceReportNoEncoding
-            );
+            ->willReturn(Utils::streamFor(
+                (new TestFinanceReportNoEncoding)->getContents()
+            ));
 
         $Processor = new FinanceGetReport(
             $Response

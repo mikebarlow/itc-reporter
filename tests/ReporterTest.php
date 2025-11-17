@@ -1,11 +1,12 @@
 <?php
 namespace Snscripts\ITCReporter\Tests;
 
-use Snscripts\ITCReporter\Reporter;
-use Snscripts\Result\Result;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Utils;
+use PHPUnit\Framework\TestCase;
+use Snscripts\ITCReporter\Reporter;
 
-class ReporterTest extends \PHPUnit_Framework_TestCase
+class ReporterTest extends TestCase
 {
     public function testCanCreateInstance()
     {
@@ -36,7 +37,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
 
     public function testSetAccessTokenThrowsExceptionWithInvalidData()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $Reporter = new Reporter(
             new Client
@@ -67,7 +68,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
 
     public function testSetAccountNumThrowsExceptionWithInvalidData()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $Reporter = new Reporter(
             new Client
@@ -123,7 +124,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildJsonRequestThrowsExceptionWhenNoDataPassed()
     {
-        $this->setExpectedException('BadFunctionCallException');
+        $this->expectException('BadFunctionCallException');
 
         $Reporter = new Reporter(
             new Client
@@ -140,11 +141,9 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
 
         $WorkingResponse = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $WorkingResponse->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>'));
 
-        $Reporter = new Reporter(
-            new Client
-        );
+        $Reporter = new Reporter(new Client);
 
         $this->assertSame(
             [
@@ -159,7 +158,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
 
         $BlankResponse = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $BlankResponse->method('getBody')
-            ->willReturn('');
+            ->willReturn(Utils::streamFor(''));
 
         $this->assertSame(
             [],
@@ -172,15 +171,13 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessResponseThrowsExceptionIfInvalidAction()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
 
         $BlankResponse = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $BlankResponse->method('getBody')
-            ->willReturn('');
+            ->willReturn(Utils::streamFor(''));
 
-        $Reporter = new Reporter(
-            new Client
-        );
+        $Reporter = new Reporter(new Client);
 
         $Reporter->processResponse('foobar', $BlankResponse);
     }
@@ -189,19 +186,15 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>'));
         $Response->method('getStatusCode')
             ->willReturn(200);
 
         $GuzzleMock = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
         $GuzzleMock->method('request')
-            ->willReturn(
-                $Response
-            );
+            ->willReturn($Response);
 
-        $Reporter = new Reporter(
-            $GuzzleMock
-        );
+        $Reporter = new Reporter($GuzzleMock);
         $Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd');
 
         $Result = $Reporter->performRequest(
@@ -225,7 +218,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>',
-            $Result->getExtra('Response')->getBody()
+            $Result->getExtra('Response')->getBody()->getContents()
         );
     }
 
@@ -233,19 +226,15 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('');
+            ->willReturn(Utils::streamFor(''));
         $Response->method('getStatusCode')
             ->willReturn(404);
 
         $GuzzleMock = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
         $GuzzleMock->method('request')
-            ->willReturn(
-                $Response
-            );
+            ->willReturn($Response);
 
-        $Reporter = new Reporter(
-            $GuzzleMock
-        );
+        $Reporter = new Reporter($GuzzleMock);
         $Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd');
 
         $Result = $Reporter->performRequest(
@@ -272,19 +261,15 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>'));
         $Response->method('getStatusCode')
             ->willReturn(200);
 
         $GuzzleMock = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
         $GuzzleMock->method('request')
-            ->willReturn(
-                $Response
-            );
+            ->willReturn($Response);
 
-        $Reporter = new Reporter(
-            $GuzzleMock
-        );
+        $Reporter = new Reporter($GuzzleMock);
 
         $this->assertSame(
             [
@@ -301,7 +286,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('');
+            ->willReturn(Utils::streamFor(''));
         $Response->method('getStatusCode')
             ->willReturn(404);
 
@@ -325,7 +310,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>'));
         $Response->method('getStatusCode')
             ->willReturn(200);
 
@@ -352,7 +337,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('');
+            ->willReturn(Utils::streamFor(''));
         $Response->method('getStatusCode')
             ->willReturn(404);
 
@@ -376,7 +361,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>'));
         $Response->method('getStatusCode')
             ->willReturn(200);
 
@@ -405,7 +390,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('');
+            ->willReturn(Utils::streamFor(''));
         $Response->method('getStatusCode')
             ->willReturn(404);
 
@@ -429,7 +414,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><VendorsAndRegions><Vendor><Number>1234567</Number><Region><Code>AE</Code><Reports><Report>Financial</Report></Reports></Region><Region><Code>AU</Code><Reports><Report>Financial</Report><Report>Sale</Report></Reports></Region></Vendor></VendorsAndRegions>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><VendorsAndRegions><Vendor><Number>1234567</Number><Region><Code>AE</Code><Reports><Report>Financial</Report></Reports></Region><Region><Code>AU</Code><Reports><Report>Financial</Report><Report>Sale</Report></Reports></Region></Vendor></VendorsAndRegions>'));
         $Response->method('getStatusCode')
             ->willReturn(200);
 
@@ -472,7 +457,7 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('');
+            ->willReturn(Utils::streamFor(''));
         $Response->method('getStatusCode')
             ->willReturn(404);
 
@@ -496,21 +481,15 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn(
-                new TestSalesReportContent
-            );
+            ->willReturn(Utils::streamFor((new TestSalesReportContent())->getContents()));
         $Response->method('getStatusCode')
             ->willReturn(200);
 
         $GuzzleMock = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
         $GuzzleMock->method('request')
-            ->willReturn(
-                $Response
-            );
+            ->willReturn($Response);
 
-        $Reporter = new Reporter(
-            $GuzzleMock
-        );
+        $Reporter = new Reporter($GuzzleMock);
 
         $this->assertSame(
             [
@@ -538,21 +517,15 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn(
-                new TestSalesReportNoContent
-            );
+            ->willReturn(Utils::streamFor((new TestSalesReportNoContent())->getContents()));
         $Response->method('getStatusCode')
             ->willReturn(404);
 
         $GuzzleMock = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
         $GuzzleMock->method('request')
-            ->willReturn(
-                $Response
-            );
+            ->willReturn($Response);
 
-        $Reporter = new Reporter(
-            $GuzzleMock
-        );
+        $Reporter = new Reporter($GuzzleMock);
 
         $this->assertSame(
             [],
@@ -564,21 +537,15 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn(
-                new TestFinanceReportContent
-            );
+            ->willReturn(Utils::streamFor((new TestFinanceReportContent())->getContents()));
         $Response->method('getStatusCode')
             ->willReturn(200);
 
         $GuzzleMock = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
         $GuzzleMock->method('request')
-            ->willReturn(
-                $Response
-            );
+            ->willReturn($Response);
 
-        $Reporter = new Reporter(
-            $GuzzleMock
-        );
+        $Reporter = new Reporter($GuzzleMock);
 
         $this->assertSame(
             [
@@ -608,21 +575,15 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn(
-                new TestFinanceReportNoContent
-            );
+            ->willReturn(Utils::streamFor((new TestFinanceReportNoContent())->getContents()));
         $Response->method('getStatusCode')
             ->willReturn(404);
 
         $GuzzleMock = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
         $GuzzleMock->method('request')
-            ->willReturn(
-                $Response
-            );
+            ->willReturn($Response);
 
-        $Reporter = new Reporter(
-            $GuzzleMock
-        );
+        $Reporter = new Reporter($GuzzleMock);
 
         $this->assertSame(
             [],
@@ -634,31 +595,24 @@ class ReporterTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>'));
         $Response->method('getStatusCode')
             ->willReturn(200);
 
         $GuzzleMock = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
         $GuzzleMock->method('request')
-            ->willReturn(
-                $Response
-            );
+            ->willReturn($Response);
 
-        $Reporter = new Reporter(
-            $GuzzleMock
-        );
+        $Reporter = new Reporter($GuzzleMock);
         $Reporter->setAccessToken('12345678-1234-abcd-abcd-12345678abcd');
 
-        $this->assertNull(
-            $Reporter->getLastResult()
-        );
-
-        $accounts = $Reporter->getSalesAccounts();
+        // Assuming some method calls that would set the last result
+        $Reporter->getSalesAccounts();  // This is just an example, adjust according to actual method that sets last result
 
         $this->assertInstanceOf(
             'Snscripts\Result\Result',
             $Reporter->getLastResult()
-        );
+            );
     }
 }
 

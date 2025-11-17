@@ -1,22 +1,19 @@
 <?php
 namespace Snscripts\ITCReporter\Tests\Responses;
 
+use GuzzleHttp\Psr7\Utils;
+use PHPUnit\Framework\TestCase;
 use Snscripts\ITCReporter\Responses\SalesGetReport;
 
-class SalesGetReportTest extends \PHPUnit_Framework_TestCase
+class SalesGetReportTest extends TestCase
 {
-    public function setUp()
-    {
-
-    }
-
     public function testProcessReturnsReportInArrayFormat()
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn(
-                new TestSalesReportContent
-            );
+            ->willReturn(Utils::streamFor(
+                (new TestSalesReportContent)->getContents()
+            ));
 
         $Processor = new SalesGetReport(
             $Response
@@ -48,9 +45,9 @@ class SalesGetReportTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn(
-                new TestSalesReportNoContent
-            );
+            ->willReturn(Utils::streamFor(
+                (new TestSalesReportNoContent)->getContents()
+            ));
 
         $Processor = new SalesGetReport(
             $Response
@@ -66,9 +63,9 @@ class SalesGetReportTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn(
-                new TestSalesReportNoEncoding
-            );
+            ->willReturn(Utils::streamFor(
+                (new TestSalesReportNoEncoding)->getContents()
+            ));
 
         $Processor = new SalesGetReport(
             $Response

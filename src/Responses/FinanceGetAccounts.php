@@ -1,11 +1,13 @@
 <?php
 namespace Snscripts\ITCReporter\Responses;
 
-use Snscripts\ITCReporter\Interfaces\ResponseProcessor;
 use Psr\Http\Message\ResponseInterface;
+use Snscripts\ITCReporter\Interfaces\ResponseProcessor;
 
 class FinanceGetAccounts implements ResponseProcessor
 {
+    protected $Response;
+    
     public function __construct(ResponseInterface $Response)
     {
         $this->Response = $Response;

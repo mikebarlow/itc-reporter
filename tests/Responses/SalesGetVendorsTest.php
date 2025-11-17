@@ -1,15 +1,17 @@
 <?php
 namespace Snscripts\ITCReporter\Tests\Responses;
 
+use GuzzleHttp\Psr7\Utils;
+use PHPUnit\Framework\TestCase;
 use Snscripts\ITCReporter\Responses\SalesGetVendors;
 
-class SalesGetVendorsTest extends \PHPUnit_Framework_TestCase
+class SalesGetVendorsTest extends TestCase
 {
     public function testProcessReturnsCorrectValueForSingleSalesVendor()
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor></Vendors>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor></Vendors>'));
 
         $Processor = new SalesGetVendors(
             $Response
@@ -27,7 +29,7 @@ class SalesGetVendorsTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors><Vendor>1234567</Vendor><Vendor>9876543</Vendor></Vendors>'));
 
         $Processor = new SalesGetVendors(
             $Response
@@ -46,7 +48,7 @@ class SalesGetVendorsTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors>1234567</Vendor><dor>9876543</Vendor></Vendors>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Vendors>1234567</Vendor><dor>9876543</Vendor></Vendors>'));
 
         $Processor = new SalesGetVendors(
             $Response
@@ -62,7 +64,7 @@ class SalesGetVendorsTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('');
+            ->willReturn(Utils::streamFor(''));
 
         $Processor = new SalesGetVendors(
             $Response

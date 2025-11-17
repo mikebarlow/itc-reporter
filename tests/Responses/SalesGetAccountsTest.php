@@ -1,15 +1,17 @@
 <?php
 namespace Snscripts\ITCReporter\Tests\Responses;
 
+use GuzzleHttp\Psr7\Utils;
+use PHPUnit\Framework\TestCase;
 use Snscripts\ITCReporter\Responses\SalesGetAccounts;
 
-class SalesGetAccountsTest extends \PHPUnit_Framework_TestCase
+class SalesGetAccountsTest extends TestCase
 {
     public function testProcessReturnsCorrectValueForSingleSalesAccount()
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account></Accounts>'));
 
         $Processor = new SalesGetAccounts(
             $Response
@@ -31,7 +33,7 @@ class SalesGetAccountsTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account><Account><Name>Jane Doe</Name><Number>9876543</Number></Account></Accounts>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith</Name><Number>1234567</Number></Account><Account><Name>Jane Doe</Name><Number>9876543</Number></Account></Accounts>'));
 
         $Processor = new SalesGetAccounts(
             $Response
@@ -56,7 +58,7 @@ class SalesGetAccountsTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith 1234567</Number></Account><Account><Name>Jane Doe</Name><Number>9876543</Number></Accounts>');
+            ->willReturn(Utils::streamFor('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Accounts><Account><Name>John Smith 1234567</Number></Account><Account><Name>Jane Doe</Name><Number>9876543</Number></Accounts>'));
 
         $Processor = new SalesGetAccounts(
             $Response
@@ -72,7 +74,7 @@ class SalesGetAccountsTest extends \PHPUnit_Framework_TestCase
     {
         $Response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')->getMock();
         $Response->method('getBody')
-            ->willReturn('');
+            ->willReturn(Utils::streamFor(''));
 
         $Processor = new SalesGetAccounts(
             $Response

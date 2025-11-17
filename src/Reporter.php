@@ -1,8 +1,8 @@
 <?php
 namespace Snscripts\ITCReporter;
 
-use GuzzleHttp\ClientInterface;
 use Snscripts\Result\Result;
+use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class Reporter
